@@ -46,6 +46,15 @@ public class GraphCompletionTime {
 
     // 計算最大完成時間
     public int calculateMaxCompletionTime(int n) {
+        if (!isDAG(n)) {
+            return -1; // 如果不是有向無環圖，返回 -1
+        }
+
+        return calculateTotalTime(n);
+    }
+
+    // 判斷是否為有向無環圖（DAG）
+    private boolean isDAG(int n) {
         Queue<Integer> queue = new LinkedList<>();
         int processedCount = 0;
 
@@ -66,9 +75,12 @@ public class GraphCompletionTime {
                 }
             }
         }
-        if(processedCount < n) return -1;
 
+        return processedCount == n; // 如果處理的節點數等於 n，則是 DAG
+    }
 
+    // 計算總時間
+    private int calculateTotalTime(int n) {
         int totalTime = 0;
         for (int i = 0; i < n; i++) {
             totalTime += timeRequired.get(i);
