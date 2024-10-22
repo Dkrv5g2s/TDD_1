@@ -67,6 +67,32 @@ class GraphCompletionTimeTest {
         assertEquals(14, result); // 總時間應為 10 (2 + 3 + 1 + 4)
     }
 
+    @Test
+    public void testMultipleDisjointGraphs() {
+        GraphCompletionTime graph = new GraphCompletionTime(6);
+
+        // 第一個不相連的部分圖
+        graph.setTimeRequired(1, 3); // Node 1 需要 3 時間
+        graph.setTimeRequired(2, 2); // Node 2 需要 2 時間
+        graph.setTimeRequired(3, 5); // Node 3 需要 4 時間
+        graph.addEdge(1, 2); // 邊 1 -> 2
+        graph.addEdge(2, 3); // 邊 2 -> 3
+
+        // 第二個不相連的部分圖
+        graph.setTimeRequired(4, 6); // Node 4 需要 6 時間
+        graph.setTimeRequired(5, 1); // Node 5 需要 1 時間
+        graph.setTimeRequired(6, 2); // Node 6 需要 2 時間
+        graph.addEdge(4, 5); // 邊 4 -> 5
+        graph.addEdge(5, 6); // 邊 5 -> 6
+
+        int result = graph.calculateMaxCompletionTime(6);
+        // 預期結果應該是計算第一個圖(3+2+4=9) 和第二個圖(6+1+2=9)，因此返回 9
+        assertEquals(10, result);
+    }
+
+
+
+
 
 }
 
