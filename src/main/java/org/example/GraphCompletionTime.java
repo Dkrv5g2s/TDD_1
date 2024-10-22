@@ -43,9 +43,32 @@ public class GraphCompletionTime {
         inDegree.set(to - 1, inDegree.get(to - 1) + 1); // 更新 `to` 節點的入度
     }
 
-    // 計算最大完成時間
+
     // 計算最大完成時間
     public int calculateMaxCompletionTime(int n) {
+        Queue<Integer> queue = new LinkedList<>();
+        int processedCount = 0;
+
+        for (int i = 0; i < n; i++) {
+            if (inDegree.get(i) == 0) {
+                queue.add(i);
+            }
+        }
+
+        while (!queue.isEmpty()) {
+            int node = queue.poll();
+            processedCount++;
+
+            for (int nextNode : adjacencyList.get(node)) {
+                inDegree.set(nextNode, inDegree.get(nextNode) - 1);
+                if (inDegree.get(nextNode) == 0) {
+                    queue.add(nextNode);
+                }
+            }
+        }
+        if(processedCount < n) return -1;
+
+
         int totalTime = 0;
         for (int i = 0; i < n; i++) {
             totalTime += timeRequired.get(i);
