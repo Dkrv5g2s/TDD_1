@@ -44,15 +44,6 @@ public class GraphCompletionTime {
     }
 
 
-    // 計算最大完成時間
-    public int calculateMaxCompletionTime(int n) {
-        if (!isDAG(n)) {
-            return -1; // 如果不是有向無環圖，返回 -1
-        }
-
-        return calculateTotalTime(n);
-    }
-
     // 判斷是否為有向無環圖（DAG）
     private boolean isDAG(int n) {
         Queue<Integer> queue = new LinkedList<>();
@@ -79,13 +70,49 @@ public class GraphCompletionTime {
         return processedCount == n; // 如果處理的節點數等於 n，則是 DAG
     }
 
-    // 計算總時間
-    private int calculateTotalTime(int n) {
-        int totalTime = 0;
-        for (int i = 0; i < n; i++) {
-            totalTime += timeRequired.get(i);
+    // 計算最大完成時間
+    public int calculateMaxCompletionTime(int n) {
+        if (!isDAG(n)) {
+            return -1; // 如果有循環，返回 -1
         }
-        return totalTime;
+
+        // 追蹤每個不相連子圖的最大完成時間
+        int overallMaxTime = 0;
+
+        // 記錄已訪問的節點
+        boolean[] visited = new boolean[n];
+
+        // 對於每個節點，如果它尚未訪問過，計算它所屬子圖的完成時間
+        for (int i = 0; i < n; i++) {
+            if (!visited[i] && inDegree.get(i) == 0) {
+                int maxTimeForComponent = calculateTotalTimeForComponent(i, visited);
+                overallMaxTime = Math.max(overallMaxTime, maxTimeForComponent);
+            }
+        }
+
+        return overallMaxTime;
     }
 
+    // 計算單個不相連子圖的總完成時間
+    private int calculateTotalTimeForComponent(int startNode, boolean[] visited) {
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(startNode);
+        visited[startNode] = true;
+
+        int currentCompletionTime = 0;
+
+        while (!queue.isEmpty()) {
+            int node = queue.poll();
+            currentCompletionTime=currentCompletionTime+timeRequired.get(node);
+
+            for (int nextNode : adjacencyList.get(node)) {
+                if (!visited[nextNode]) {
+                    visited[nextNode] = true;
+                    queue.add(nextNode);
+                }
+            }
+        }
+
+        return currentCompletionTime;
+    }
 }
