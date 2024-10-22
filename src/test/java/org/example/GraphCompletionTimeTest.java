@@ -90,6 +90,30 @@ class GraphCompletionTimeTest {
         assertEquals(10, result);
     }
 
+    @Test
+    void testMaxCompletionTimeForMultipleDependencies() {
+        int n = 5;
+        GraphCompletionTime graph = new GraphCompletionTime(n);
+
+        // 設置節點所需時間
+        graph.setTimeRequired(1, 6);
+        graph.setTimeRequired(2, 5);
+        graph.setTimeRequired(3, 11);
+        graph.setTimeRequired(4, 4);
+        graph.setTimeRequired(5, 8);
+
+        // 設置圖的邊
+        graph.addEdge(1, 2);
+        graph.addEdge(1, 3);
+        graph.addEdge(2, 4);
+        graph.addEdge(3, 5);
+        graph.addEdge(4, 5);
+
+        // 驗證最大完成時間
+        int result = graph.calculateMaxCompletionTime(n);
+        assertEquals(25, result);
+    }
+
 
 
 
