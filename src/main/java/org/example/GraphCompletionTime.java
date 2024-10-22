@@ -99,13 +99,20 @@ public class GraphCompletionTime {
         queue.add(startNode);
         visited[startNode] = true;
 
-        int currentCompletionTime = 0;
+        // 設定該節點的最早完成時間
+        earliestCompletion.set(startNode, timeRequired.get(startNode));
 
+        // 計算最早完成時間
         while (!queue.isEmpty()) {
             int node = queue.poll();
-            currentCompletionTime=currentCompletionTime+timeRequired.get(node);
 
             for (int nextNode : adjacencyList.get(node)) {
+                // 更新最早完成時間
+                int newCompletionTime = earliestCompletion.get(node) + timeRequired.get(nextNode);
+                if (earliestCompletion.get(nextNode) < newCompletionTime) {
+                    earliestCompletion.set(nextNode, newCompletionTime);
+                }
+
                 if (!visited[nextNode]) {
                     visited[nextNode] = true;
                     queue.add(nextNode);
@@ -113,7 +120,8 @@ public class GraphCompletionTime {
             }
         }
 
-        return currentCompletionTime;
+        // 返回最大完成時間
+        return earliestCompletion.stream().max(Integer::compare).orElse(0);
     }
 
 }

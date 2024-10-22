@@ -64,7 +64,7 @@ class GraphCompletionTimeTest {
         graph.addEdge(3, 4); // 2 -> 3
 
         int result = graph.calculateMaxCompletionTime(4); // 計算最大完成時間
-        assertEquals(14, result); // 總時間應為 10 (2 + 3 + 1 + 4)
+        assertEquals(12, result); // 總時間應為 10 (2 + 3 + 1 + 4)
     }
 
     @Test
