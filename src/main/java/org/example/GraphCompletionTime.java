@@ -44,9 +44,13 @@ public class GraphCompletionTime {
     }
 
     // 計算最大完成時間
+    // 計算最大完成時間
     public int calculateMaxCompletionTime(int n) {
-        return -1;
+        int totalTime = 0;
+        for (int i = 0; i < n; i++) {
+            totalTime += timeRequired.get(i);
+        }
+        return totalTime;
     }
-
 
 }
